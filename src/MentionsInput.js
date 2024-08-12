@@ -17,6 +17,7 @@ import {
   keys,
   omit,
   getSuggestionHtmlId,
+  findMentionInPlainText,
 } from './utils'
 
 import Highlighter from './Highlighter'
@@ -83,6 +84,7 @@ const propTypes = {
   onSelect: PropTypes.func,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
+  onMentionClick: PropTypes.func,
   suggestionsPortalHost:
     typeof Element === 'undefined'
       ? PropTypes.any
@@ -128,16 +130,13 @@ class MentionsInput extends React.Component {
 
     this.state = {
       focusIndex: 0,
-
       selectionStart: null,
       selectionEnd: null,
-
       suggestions: {},
-
       caretPosition: null,
       suggestionsPosition: {},
-
       setSelectionAfterHandlePaste: false,
+      isClicked: false,
     }
   }
 
@@ -247,7 +246,15 @@ class MentionsInput extends React.Component {
   }
 
   renderTextarea = (props) => {
-    return <textarea ref={this.setInputRef} {...props} />
+    return (
+      <textarea
+        onClick={() => {
+          this.setState({ isClicked: true })
+        }}
+        ref={this.setInputRef}
+        {...props}
+      />
+    )
   }
 
   setInputRef = (el) => {
@@ -330,6 +337,18 @@ class MentionsInput extends React.Component {
   }
 
   handleCaretPositionChange = (position) => {
+    if (this.state.isClicked) {
+      this.setState({ isClicked: false })
+
+      const value = this.props.value || ''
+      const config = readConfigFromChildren(this.props.children)
+      const selectionStart = this.inputElement.selectionStart
+      let mention = findMentionInPlainText(value, config, selectionStart)
+      if (mention && this.props.onMentionClick) {
+        this.props.onMentionClick(mention.id)
+      }
+    }
+
     this.setState({ caretPosition: position })
   }
 
@@ -517,14 +536,14 @@ class MentionsInput extends React.Component {
 
     let newPlainTextValue = ev.target.value
 
-    let selectionStartBefore = this.state.selectionStart;
-    if(selectionStartBefore == null) {
-      selectionStartBefore = ev.target.selectionStart;
+    let selectionStartBefore = this.state.selectionStart
+    if (selectionStartBefore == null) {
+      selectionStartBefore = ev.target.selectionStart
     }
 
-    let selectionEndBefore = this.state.selectionEnd;
-    if(selectionEndBefore == null) {
-      selectionEndBefore = ev.target.selectionEnd;
+    let selectionEndBefore = this.state.selectionEnd
+    if (selectionEndBefore == null) {
+      selectionEndBefore = ev.target.selectionEnd
     }
 
     // Derive the new value to set by applying the local change in the textarea's plain text

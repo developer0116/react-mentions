@@ -52,5 +52,6 @@
   text-shadow: 1px 1px 1px white, 1px -1px 1px white, -1px 1px 1px white,
     -1px -1px 1px white;
   text-decoration: underline;
-  pointer-events: none;
+  /* pointer-events: none; */
+  cursor: pointer;
 }

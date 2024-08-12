@@ -20,6 +20,9 @@ function Scrollable({ value, data, onChange, onAdd }) {
     },
   })
 
+  const handleClick = (id) => {
+    console.log('click', id)
+  }
   return (
     <div className="scrollable">
       <h3>Scrollable container</h3>
@@ -31,6 +34,7 @@ function Scrollable({ value, data, onChange, onAdd }) {
       <MentionsInput
         value={value}
         onChange={onChange}
+        onMentionClick={handleClick}
         style={style}
         placeholder={"Mention people using '@'"}
         a11ySuggestionsListLabel={'Suggested mentions'}

@@ -1,9 +1,8 @@
 export { default as escapeRegex } from './escapeRegex'
 export { default as getPlainText } from './getPlainText'
 export { default as applyChangeToValue } from './applyChangeToValue'
-export {
-  default as findStartOfMentionInPlainText,
-} from './findStartOfMentionInPlainText'
+export { default as findStartOfMentionInPlainText } from './findStartOfMentionInPlainText'
+export { default as findMentionInPlainText } from './findMentionInPlainText'
 export { default as getMentions } from './getMentions'
 export { default as getSuggestionHtmlId } from './getSuggestionHtmlId'
 export { default as countSuggestions } from './countSuggestions'
